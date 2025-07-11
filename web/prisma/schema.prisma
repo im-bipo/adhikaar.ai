@@ -1,0 +1,50 @@
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Lawyer {
+  id           String   @id @default(uuid())
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  name         String
+  email        String   
+  barId        String   
+  specialty     LawyerSpecialty[]  
+  description  String  
+  profilePicture String 
+
+  noOfCases    Int      @default(0) 
+  wonCases     Int      @default(0) 
+  lostCases    Int      @default(0) 
+  pendingCases Int      @default(0) 
+
+  city         String
+  state        String
+  country      String
+  phoneNumber  String 
+}
+
+
+enum LawyerSpecialty {
+  CRIMINAL_LAW
+  FAMILY_LAW
+  CORPORATE_LAW
+  REAL_ESTATE_LAW
+  INTELLECTUAL_PROPERTY_LAW
+  IMMIGRATION_LAW
+  ENVIRONMENTAL_LAW
+  TAX_LAW
+  PERSONAL_INJURY_LAW
+  EMPLOYMENT_LAW
+  BANKRUPTCY_LAW
+  ESTATE_PLANNING
+  HEALTHCARE_LAW
+  CIVIL_LITIGATION
+}
