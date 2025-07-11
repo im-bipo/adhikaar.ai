@@ -1,0 +1,31 @@
+.content-grid,
+.full-width:not(.content-full-width) {
+  --content-max-width: 1000px;
+  --content-padding: 1rem;
+  --breakout-max-width: 10rem;
+
+  display: grid;
+  grid-template-columns:
+    [full-width-start] minmax(var(--content-padding), 1fr)
+    [breakout-start] minmax(0, var(--breakout-max-width))
+    [content-start] min(
+      var(--content-max-width),
+      100% - var(--content-padding) * 2
+    )
+    [content-end]
+    minmax(0, var(--breakout-max-width)) [breakout-end]
+    minmax(var(--content-padding), 1fr) [full-width-end];
+}
+
+.content-grid > :not(.breakout):not(.full-width),
+.full-width:not(.content-full-width) > :not(.breakout):not(.full-width) {
+  grid-column: content;
+}
+
+.content-grid > .breakout {
+  grid-column: breakout;
+}
+
+.content-grid > .full-width {
+  grid-column: full-width;
+}

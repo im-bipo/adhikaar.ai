@@ -1,5 +1,6 @@
 import NavBar from "@/components/custom/NavBar/NavBar";
 import "./globals.css";
+import "./app.css";
 import { ClerkProvider } from '@clerk/nextjs';
 
 export const metadata = {
@@ -14,7 +15,7 @@ export default function RootLayout({ children }) {
         <body>
           <div>
             <NavBar />
-            <main className="flex min-h-screen flex-col items-center justify-center p-24">
+            <main className="flex min-h-screen flex-col items-center justify-center">
               {children}
             </main>
           </div>

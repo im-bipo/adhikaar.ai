@@ -184,8 +184,8 @@ export default function ChatPage() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100 p-4">
-      <Card className="w-full max-w-2xl">
+    <div className="flex w-full items-center justify-center p-4">
+      <Card className="w-full">
         <CardHeader>
           <div className="flex items-center justify-between">
             <CardTitle>Chat System</CardTitle>
