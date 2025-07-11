@@ -1,8 +1,13 @@
 import React from 'react'
+import HeroLander from './components/HeroLander'
+import ServicesSection from './components/OurServices'
 
 const App = () => {
   return (
-    <div>App</div>
+    <>
+    <HeroLander />
+    <ServicesSection />
+    </>
   )
 }
 

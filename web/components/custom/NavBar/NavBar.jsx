@@ -13,7 +13,7 @@ const navigationItems = [
 
 export default function Navbar() {
   return (
-    <header className="sticky content-grid top-0 z-50 w-full border-b bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60 content-grid ">
+    <header className="sticky content-grid top-0 z-50 w-full border-b bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/95 content-grid ">
       <div className="full-width">
         <div className="flex h-16 items-center justify-between px-4">
           {/* Logo */}
