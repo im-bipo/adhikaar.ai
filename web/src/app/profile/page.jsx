@@ -1,9 +1,15 @@
-import React from 'react'
-import { SignInButton, SignUpButton, SignedIn, SignedOut, UserButton } from '@clerk/nextjs';
-import LawyerRegistrationForm from './components/LawyerRegistrationForm';
-import { currentUser } from '@clerk/nextjs/server'
-import { prisma } from '@/lib/prisma';
-import LawyerProfile from './components/lawyer-profile';
+import React from "react";
+import {
+  SignInButton,
+  SignUpButton,
+  SignedIn,
+  SignedOut,
+  UserButton,
+} from "@clerk/nextjs";
+import LawyerRegistrationForm from "./components/LawyerRegistrationForm";
+import { currentUser } from "@clerk/nextjs/server";
+import { prisma } from "@/lib/prisma";
+import LawyerProfile from "./components/lawyer-profile";
 
 const Profile = async () => {
   const user = await currentUser();
@@ -20,8 +26,7 @@ const Profile = async () => {
     where: {
       id: user.id,
     },
-  })
-
+  });
 
   if (!isMyLawyer) {
     return (
@@ -39,13 +44,12 @@ const Profile = async () => {
         <SignInButton />
         <SignUpButton />
       </SignedOut>
-      <SignedIn>
-      </SignedIn>
+      <SignedIn></SignedIn>
       <SignedIn>
         <LawyerProfile lawyer={isMyLawyer} />
       </SignedIn>
     </div>
-  )
-}
+  );
+};
 
-export default Profile
+export default Profile;

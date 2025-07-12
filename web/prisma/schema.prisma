@@ -8,11 +8,30 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  clerkId   String?  @unique
+  name      String?
+  email     String?
+  
+  // User can send messages
+  sentMessages     Message[] @relation("UserSentMessages")
+  // User can receive messages from lawyers
+  receivedMessages Message[] @relation("UserReceivedMessages")
+  
+  // Chat sessions
+  chatSessions ChatSession[] @relation("UserChatSessions")
+}
+
 model Lawyer {
   id           String   @id @default(uuid())
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
+  clerkId      String?  @unique
   name         String
   email        String   
   barId        String   
@@ -29,6 +48,64 @@ model Lawyer {
   state        String
   country      String
   phoneNumber  String 
+  
+  // Lawyer can send messages to users
+  sentMessages     Message[] @relation("LawyerSentMessages")
+  // Chat sessions with users
+  chatSessions     ChatSession[] @relation("LawyerChatSessions")
+}
+
+model ChatSession {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  userId    String?
+  user      User?   @relation("UserChatSessions", fields: [userId], references: [id])
+  
+  lawyerId  String?
+  lawyer    Lawyer? @relation("LawyerChatSessions", fields: [lawyerId], references: [id])
+  
+  status    ChatStatus @default(ACTIVE)
+  
+  messages  Message[]
+  
+  @@index([userId])
+  @@index([lawyerId])
+}
+
+model Message {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  content   String
+  messageType MessageType
+  senderType  SenderType
+  
+  // Relationships
+  chatSessionId String
+  chatSession   ChatSession @relation(fields: [chatSessionId], references: [id], onDelete: Cascade)
+  
+  // User sender
+  userId        String?
+  userSender    User?   @relation("UserSentMessages", fields: [userId], references: [id])
+  
+  // Lawyer sender  
+  lawyerId      String?
+  lawyerSender  Lawyer? @relation("LawyerSentMessages", fields: [lawyerId], references: [id])
+  
+  // User receiver (for lawyer messages)
+  userReceiverId String?
+  userReceiver   User?   @relation("UserReceivedMessages", fields: [userReceiverId], references: [id])
+  
+  // AI response metadata
+  aiResponse    Boolean @default(false)
+  aiModel       String?
+  
+  @@index([chatSessionId])
+  @@index([userId])
+  @@index([lawyerId])
 }
 
 
@@ -47,4 +124,23 @@ enum LawyerSpecialty {
   ESTATE_PLANNING
   HEALTHCARE_LAW
   CIVIL_LITIGATION
+}
+
+enum ChatStatus {
+  ACTIVE
+  CLOSED
+  PENDING
+}
+
+enum MessageType {
+  TEXT
+  SYSTEM
+  NOTIFICATION
+}
+
+enum SenderType {
+  USER
+  LAWYER
+  AI
+  SYSTEM
 }

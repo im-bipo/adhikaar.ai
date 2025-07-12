@@ -1,9 +1,10 @@
 import os
 import httpx
 import json
-from database import top_k_chunks
+from database import top_k_chunks 
 from fastapi import HTTPException
 from dotenv import load_dotenv
+
 
 
 
