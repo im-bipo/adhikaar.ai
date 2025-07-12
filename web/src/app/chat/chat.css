@@ -33,3 +33,60 @@
     opacity: 1;
   }
 }
+
+/* Text truncation utility */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Smooth transitions for layout changes */
+.layout-transition {
+  transition: width 300ms ease-in-out;
+}
+
+/* Custom scrollbar for lawyer list */
+.lawyer-list-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+
+.lawyer-list-scroll::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 3px;
+}
+
+.lawyer-list-scroll::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+
+.lawyer-list-scroll::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Lawyer card hover effects */
+.lawyer-card {
+  transition: all 0.2s ease-in-out;
+}
+
+.lawyer-card:hover {
+  transform: translateY(-2px);
+}
+
+/* Fixed height for description in grid cards */
+.lawyer-description {
+  height: 2rem;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+/* Ensure consistent spacing in grid */
+.lawyer-grid-card {
+  min-height: 200px;
+}
