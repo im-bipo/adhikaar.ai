@@ -25,5 +25,6 @@ async def get_query(request:Request):
             "category": [], # lawyer type / recommendation based on the query_subject
             "type": classify["category"]  # general_chat, unsupported, harmful_intent
         }
+    
      
     
