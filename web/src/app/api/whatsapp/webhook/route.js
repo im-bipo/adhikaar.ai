@@ -1,4 +1,5 @@
 import { sendReply } from "@/lib/whapsApp";
+import { AskAdhikaarAI } from "@/src/actions/AdhikaarAI";
 import { NextResponse } from "next/server";
 
 export const GET = async (req) => {
@@ -25,7 +26,6 @@ export const GET = async (req) => {
 export async function POST(request) {
   const body = await request.json();
 
-
   const message = body?.entry?.[0]?.changes?.[0]?.value?.messages?.[0];
   const senderId = body?.entry?.[0]?.changes?.[0]?.value?.contacts?.[0]?.wa_id; // The sender's WhatsApp ID
 
@@ -34,16 +34,28 @@ export async function POST(request) {
     return new NextResponse("OK", { status: 200 }); // Always respond with 200 OK to acknowledge receipt
   }
 
-
   if (message.type === "text") {
     const text = message.text.body;
     console.log("Received text:", text);
 
     try {
-      const aiResponse = "Oee chup lag";
+      const aiResponse = await AskAdhikaarAI(text);
       console.log("AI Response:", aiResponse);
 
-      await sendReply(senderId, aiResponse);
+      // Ensure aiResponse is a string before using .replace
+      let aiResponseStr =
+        typeof aiResponse === "string"
+          ? aiResponse
+          : JSON.stringify(aiResponse);
+
+      let cleanedString = aiResponseStr
+        .replace(/^```json\s*|\s*```$/g, "")
+        .trim();
+      console.log("Cleaned String:", cleanedString);
+      const jsonResponse = JSON.parse(cleanedString);
+      console.log("Parsed JSON Response:", jsonResponse);
+
+      await sendReply(senderId, jsonResponse.message);
       console.log("Dummy reply sent for text message.");
     } catch (error) {
       console.error("Error getting or sending AI response:", error);
@@ -52,8 +64,7 @@ export async function POST(request) {
         "Sorry, I'm having trouble responding right now."
       );
     }
-  }
-  else {
+  } else {
     console.log(
       `Received unsupported message type: ${message.type}. Acknowledging.`
     );
