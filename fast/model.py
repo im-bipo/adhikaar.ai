@@ -1,9 +1,10 @@
 import os
 import httpx
 import json
-from database import top_k_chunks
+from database import top_k_chunks 
 from fastapi import HTTPException
 from dotenv import load_dotenv
+
 
 
 
@@ -82,5 +83,5 @@ async def model(user_query: str , translated_query: str) -> dict:
             return content_dict
 
        
-# import asyncio
-# asyncio.run(model("What is the legal age for marriage in nepal?", "What is the legal age for marriage in neapl?"))
+import asyncio
+asyncio.run(model("What is the legal age for marriage in nepal?", "What is the legal age for marriage in neapl?"))
