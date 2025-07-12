@@ -15,8 +15,9 @@ async def get_query(request:Request):
     classify = await translate_and_classify(user_query)
     if classify["category"] == "legal_query":
         response = await model(user_query, classify["response"])
+        return response 
 
-    
+
     else : 
         return  {
             "message": classify["response"], # response to the user query
