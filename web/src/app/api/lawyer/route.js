@@ -79,39 +79,3 @@ export async function GET(request) {
     );
   }
 }
-
-try {
-  const lawyer = await prisma.lawyer.findUnique({
-    where: { id: lawyerId },
-  });
-
-  if (!lawyer) {
-    return new Response(JSON.stringify({ error: "Lawyer not found" }), {
-      status: 404,
-      headers: { "Content-Type": "application/json" },
-    });
-  }
-
-  return new Response(
-    JSON.stringify({
-      success: true,
-      lawyer: lawyer,
-    }),
-    {
-      status: 200,
-      headers: { "Content-Type": "application/json" },
-    }
-  );
-} catch (error) {
-  console.error("Error fetching lawyer:", error);
-  return new Response(
-    JSON.stringify({
-      error: "Failed to fetch lawyer",
-      details: error.message,
-    }),
-    {
-      status: 500,
-      headers: { "Content-Type": "application/json" },
-    }
-  );
-}
