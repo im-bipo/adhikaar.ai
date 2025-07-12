@@ -1,33 +1,30 @@
-from fastapi import FastAPI, Query
+from fastapi import FastAPI , Request
+from fastapi.responses import JSONResponse
+from pydantic import BaseModel
 from translator_and_classifier import translate_and_classify
-from model import model  # Assuming this is your RAG model
+from model import model
+
+
 
 app = FastAPI()
 
 @app.get("/query")
-async def get_query(user_query: str = Query(...)):
-    # Call the classifier
+async def get_query(request:Request): 
+    request_data = await request.json()
+    user_query = request_data.get("user_query", "")
     classify = await translate_and_classify(user_query)
-
-    # If it's a legal query, respond with references and type
     if classify["category"] == "legal_query":
-        return {
-            "message": classify["response"],
-            "reference": ["Article-", "Part-", "Chapter-", "Schedule-"],
-            "category": ["law"],
-            "type": classify["category"]
+        response = await model(user_query, classify["response"])
+        return response 
+
+
+    else : 
+        return  {
+            "message": classify["response"], # response to the user query
+            "reference": [], # reference to the legal document if any
+            "category": [], # lawyer type / recommendation based on the query_subject
+            "type": classify["category"]  # general_chat, unsupported, harmful_intent
         }
     
-    # Otherwise, general or non-legal response
-    else:
-        return {
-            "message": classify["response"],
-            "reference": [],
-            "category": [],
-            "type": classify["category"]
-        }
-
-
-@app.get("/health")
-async def health_check():
-    return {"status": "ok"}
+     
+    
