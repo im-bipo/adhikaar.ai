@@ -17,22 +17,8 @@ export default function Navbar() {
         {/* Logo */}
         <Link href="/" className="flex items-center space-x-2">
           <div className="flex items-center">
-            <svg
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-              className="text-red-500"
-            >
-              <path
-                d="M12 2L15.09 8.26L22 9L17 14.74L18.18 21.02L12 17.77L5.82 21.02L7 14.74L2 9L8.91 8.26L12 2Z"
-                fill="currentColor"
-              />
-            </svg>
-            <span className="ml-2 text-xl font-semibold text-gray-900">
-              अधिकार<span className="text-red-500">.ai</span>
-            </span>
+           <img src="/logo-final.png" width={24}  height={24} className="w-32" alt="" />
+           
           </div>
         </Link>
 
