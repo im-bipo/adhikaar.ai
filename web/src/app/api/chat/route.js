@@ -16,9 +16,13 @@ export async function POST(req) {
         const queryParams = new URLSearchParams({
           user_query: latestMessage.content,
         });
-        const response = await AskAdhikaarAI(queryParams);
-
-        console.log("FastAPI response:", response);
+        const response = await AskAdhikaarAI(queryParams.toString());
+        if (!response || !response.message) {
+          return NextResponse.json(
+            { success: false, error: "No response from AI" },
+            { status: 500 }
+          );
+        }
 
         return NextResponse.json({
           response: response.message,

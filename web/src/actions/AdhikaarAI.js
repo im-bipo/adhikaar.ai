@@ -11,7 +11,7 @@ const pc = new Pinecone({
 
 const hf = new HfInference(process.env.HUGGINGFACE_API_KEY);
 
-const index = pc.index("legal-chatbot-index");
+const index = pc.index(process.env.PINECONE_INDEX_NAME);
 
 const getEmbeddings = async (query) => {
   // query the Pinecone index for embeddings
