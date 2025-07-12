@@ -103,10 +103,4 @@ User_query: "{user_query}"
         except Exception:
             raise HTTPException(status_code=500, detail="Failed to parse fixed response as JSON.")
 
-# # ---- test ----
-# import asyncio
-# async def demo():
-#     user_query = "tapai ko name k ho give me a nepali song ?"
-#     result = await translate_and_classify(user_query)
-#     print("result", result)
-# asyncio.run(demo())
+

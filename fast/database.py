@@ -3,7 +3,8 @@ import httpx
 import json 
 from fastapi import HTTPException
 from dotenv import load_dotenv
-from sentence_transformers import SentenceTransformer , CrossEncoder
+from sentence_transformers import SentenceTransformer, CrossEncoder
+
 
 from pinecone import Pinecone , ServerlessSpec
 load_dotenv()
