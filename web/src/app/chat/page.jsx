@@ -296,7 +296,7 @@ export default function ChatPage() {
 
         const data = await response.json();
 
-        if (data.response) {
+        if (data.success && data.response) {
           const aiMessage = {
             id: (Date.now() + 1).toString(),
             content: data.response,
@@ -305,8 +305,21 @@ export default function ChatPage() {
             messageType: "TEXT",
             reference: data.reference || [],
             category: data.category || [],
+            fallback: data.fallback || false,
           };
           setMessages((prev) => [...prev, aiMessage]);
+        } else {
+          // Handle API error response
+          const errorMessage = {
+            id: (Date.now() + 1).toString(),
+            content:
+              data.error ||
+              "Sorry, I couldn't process your request. Please try again.",
+            sender: "system",
+            timestamp: new Date(),
+            messageType: "SYSTEM",
+          };
+          setMessages((prev) => [...prev, errorMessage]);
         }
       } else if (chatWith === "lawyer" && selectedLawyer) {
         // Handle lawyer chat via Socket.IO
@@ -448,7 +461,9 @@ export default function ChatPage() {
                         message.sender === "user"
                           ? "bg-blue-500 text-white"
                           : message.sender === "ai"
-                          ? "bg-green-100 text-green-800 border border-green-200"
+                          ? message.fallback
+                            ? "bg-orange-100 text-orange-800 border border-orange-200"
+                            : "bg-green-100 text-green-800 border border-green-200"
                           : message.sender === "lawyer"
                           ? "bg-purple-100 text-purple-800 border border-purple-200"
                           : message.sender === "system"
@@ -464,7 +479,9 @@ export default function ChatPage() {
                         {message.sender === "user"
                           ? "You"
                           : message.sender === "ai"
-                          ? "🤖 AI Assistant"
+                          ? `🤖 AI Assistant${
+                              message.fallback ? " (Limited Mode)" : ""
+                            }`
                           : message.sender === "lawyer"
                           ? `👨‍💼 ${selectedLawyer?.name || "Lawyer"}`
                           : "System"}
@@ -477,6 +494,14 @@ export default function ChatPage() {
                         {message.content}
                       </div>
 
+                      {/* Show fallback indicator for AI messages */}
+                      {message.sender === "ai" && message.fallback && (
+                        <div className="mt-2 text-xs text-orange-600 font-medium">
+                          ⚠️ Limited response due to temporary connectivity
+                          issues
+                        </div>
+                      )}
+
                       {/* Show references for AI messages */}
                       {message.sender === "ai" &&
                         message.reference &&
@@ -487,7 +512,11 @@ export default function ChatPage() {
                               {message.reference.map((ref, index) => (
                                 <span
                                   key={index}
-                                  className="bg-green-200 px-2 py-1 rounded text-green-700"
+                                  className={`px-2 py-1 rounded text-xs ${
+                                    message.fallback
+                                      ? "bg-orange-200 text-orange-700"
+                                      : "bg-green-200 text-green-700"
+                                  }`}
                                 >
                                   {ref}
                                 </span>
