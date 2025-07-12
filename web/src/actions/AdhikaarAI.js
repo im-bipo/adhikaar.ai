@@ -44,8 +44,31 @@ const GenAi = async (prompt) => {
   return response.text;
 };
 
-const AskAdhikaarAI = async (prompt) => {
-  const context = await getEmbeddings(prompt);
+const AskAdhikaarAI = async (query) => {
+  const context = await getEmbeddings(query);
+
+  const prompt = `
+                    You are Adhikaar.ai — a trustworthy legal assistant that answers user queries about Nepali law using the provided legal context.
+
+                    Your response must follow this JSON format:
+                    {{
+                    "message": "<Answer in a clear and concise tone>",
+                    "reference": ["<Legal source reference like Constitution of Nepal, Part 3, Article 17>"],
+                    "category": ["<Recommended type of lawyer or legal domain — e.g., constitutional lawyer, civil lawyer, criminal defense lawyer, family lawyer, etc.>"],
+                    "type": "legal_query"
+                    }}
+
+                    Instructions:
+                    - Use ONLY the provided context to answer the question.
+                    - Respond in the **same language** as the original query.
+                    - Clearly cite the legal document, part, article, chapter, or schedule used in the answer.
+
+                    ### Original User Query:
+                    ${query}
+
+                    ### Context: ${JSON.stringify(context)}
+                    `;
+
   const response = await GenAi(
     prompt + "\n\nContext: " + JSON.stringify(context)
   );
