@@ -33,7 +33,7 @@ export default function Footer() {
           {/* Column 2: Services */}
           <div className="flex flex-col space-y-3">
             <h3 className="text-lg font-semibold text-white mb-2">Services</h3>
-            <Link href="/chatbot" className="text-sm hover:text-white transition-colors">
+            <Link href="/chat" className="text-sm hover:text-white transition-colors">
               AI Chatbot
             </Link>
             <Link href="/lawyers" className="text-sm hover:text-white transition-colors">
@@ -42,7 +42,7 @@ export default function Footer() {
             <Link href="/forms" className="text-sm hover:text-white transition-colors">
               Government Forms
             </Link>
-            <Link href="/notices" className="text-sm hover:text-white transition-colors">
+            <Link href="/notice" className="text-sm hover:text-white transition-colors">
               Notice Portal
             </Link>
           </div>
