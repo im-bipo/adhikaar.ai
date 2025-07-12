@@ -14,25 +14,15 @@ async def get_query(request:Request):
     user_query = request_data.get("user_query", "")
     classify = await translate_and_classify(user_query)
     if classify["category"] == "legal_query":
-        return  {
-            "message": classify["response"],
-            "reference": ["Article-", "Part-", "Chapter-", "Schedule-"],
-            "category": ["law"],
-            "type": classify["category"]
-        }
-    # else : 
-    #    translated_query = classify["response"]
-    #    response = await model(user_query , translated_query)
-    # return {
-    #     "answer" : response["answer"]
-    # }
+        response = await model(user_query, classify["response"])
+
     
     else : 
         return  {
-            "message": classify["response"],
-            "reference": [],
-            "category": [],
-            "type": classify["category"]
+            "message": classify["response"], # response to the user query
+            "reference": [], # reference to the legal document if any
+            "category": [], # lawyer type / recommendation based on the query_subject
+            "type": classify["category"]  # general_chat, unsupported, harmful_intent
         }
      
     
