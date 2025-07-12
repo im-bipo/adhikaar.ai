@@ -2,6 +2,7 @@ import NavBar from "@/components/custom/NavBar/NavBar";
 import "./globals.css";
 import "./app.css";
 import { ClerkProvider } from '@clerk/nextjs';
+import Footer from "@/components/custom/Footer";
 
 export const metadata = {
   title: "Create Next App",
@@ -18,6 +19,7 @@ export default function RootLayout({ children }) {
             <main className="flex min-h-screen flex-col items-center justify-center">
               {children}
             </main>
+            <Footer />
           </div>
         </body>
       </html>
