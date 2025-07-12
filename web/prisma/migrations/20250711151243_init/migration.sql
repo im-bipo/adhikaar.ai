@@ -1,0 +1,25 @@
+-- CreateEnum
+CREATE TYPE "LawyerSpecialty" AS ENUM ('CRIMINAL_LAW', 'FAMILY_LAW', 'CORPORATE_LAW', 'REAL_ESTATE_LAW', 'INTELLECTUAL_PROPERTY_LAW', 'IMMIGRATION_LAW', 'ENVIRONMENTAL_LAW', 'TAX_LAW', 'PERSONAL_INJURY_LAW', 'EMPLOYMENT_LAW', 'BANKRUPTCY_LAW', 'ESTATE_PLANNING', 'HEALTHCARE_LAW', 'CIVIL_LITIGATION');
+
+-- CreateTable
+CREATE TABLE "Lawyer" (
+    "id" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "name" TEXT NOT NULL,
+    "email" TEXT NOT NULL,
+    "barId" TEXT NOT NULL,
+    "specialty" "LawyerSpecialty"[],
+    "description" TEXT NOT NULL,
+    "profilePicture" TEXT NOT NULL,
+    "noOfCases" INTEGER NOT NULL DEFAULT 0,
+    "wonCases" INTEGER NOT NULL DEFAULT 0,
+    "lostCases" INTEGER NOT NULL DEFAULT 0,
+    "pendingCases" INTEGER NOT NULL DEFAULT 0,
+    "city" TEXT NOT NULL,
+    "state" TEXT NOT NULL,
+    "country" TEXT NOT NULL,
+    "phoneNumber" TEXT NOT NULL,
+
+    CONSTRAINT "Lawyer_pkey" PRIMARY KEY ("id")
+);

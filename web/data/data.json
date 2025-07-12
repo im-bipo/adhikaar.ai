@@ -1,0 +1,32 @@
+[
+    {
+      "id": "1",
+      "title": "New Citizenship Act 2081 Implemented",
+      "date": "2024/11/30",
+      "source": "Ministry of Home Affairs",
+      "category": "Citizenship",
+      "description": "Information about the new citizenship acquisition process and required documents according to the new Citizenship Act.",
+      "pdfUrl": "/sample.pdf",
+      "isPinned": true
+    },
+    {
+      "id": "2",
+      "title": "Women Violence Prevention Program",
+      "date": "2024/11/25",
+      "source": "Ministry of Women, Children and Senior Citizens",
+      "category": "Women's Rights",
+      "description": "Information about new legal provisions against domestic violence and available support services.",
+      "pdfUrl": "/sample.pdf",
+      "isPinned": true
+    },
+    {
+      "id": "3",
+      "title": "Labor Rights Amendment",
+      "date": "2024/11/20",
+      "source": "Ministry of Labor, Employment and Social Security",
+      "category": "Labor Rights",
+      "description": "New regulations regarding minimum wage for workers and work-related rules.",
+      "pdfUrl": "/sample.pdf",
+      "isPinned": false
+    }
+  ]
