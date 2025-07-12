@@ -4,6 +4,7 @@ import React from "react";
 import { useState, useEffect, useRef } from "react";
 import { io } from "socket.io-client";
 import { useUser } from "@clerk/nextjs";
+import ReactMarkdown from "react-markdown";
 import "./chat.css";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -491,7 +492,41 @@ export default function ChatPage() {
                           message.sender === "system" ? "font-medium" : ""
                         }
                       >
-                        {message.content}
+                        {message.sender === "ai" ? (
+                          <div className="ai-message-markdown">
+                            <ReactMarkdown
+                              components={{
+                                p: ({ children }) => <p>{children}</p>,
+                                ul: ({ children }) => <ul>{children}</ul>,
+                                ol: ({ children }) => <ol>{children}</ol>,
+                                li: ({ children }) => <li>{children}</li>,
+                                strong: ({ children }) => (
+                                  <strong>{children}</strong>
+                                ),
+                                em: ({ children }) => <em>{children}</em>,
+                                code: ({ children }) => <code>{children}</code>,
+                                pre: ({ children }) => (
+                                  <pre>
+                                    <code>{children}</code>
+                                  </pre>
+                                ),
+                                h1: ({ children }) => <h1>{children}</h1>,
+                                h2: ({ children }) => <h2>{children}</h2>,
+                                h3: ({ children }) => <h3>{children}</h3>,
+                                h4: ({ children }) => <h4>{children}</h4>,
+                                h5: ({ children }) => <h5>{children}</h5>,
+                                h6: ({ children }) => <h6>{children}</h6>,
+                                blockquote: ({ children }) => (
+                                  <blockquote>{children}</blockquote>
+                                ),
+                              }}
+                            >
+                              {message.content}
+                            </ReactMarkdown>
+                          </div>
+                        ) : (
+                          message.content
+                        )}
                       </div>
 
                       {/* Show fallback indicator for AI messages */}
