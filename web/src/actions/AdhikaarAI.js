@@ -11,7 +11,7 @@ const pc = new Pinecone({
 
 const hf = new HfInference(process.env.HUGGINGFACE_API_KEY);
 
-const index = pc.index("legal-chatbot-index");
+const index = pc.index(process.env.PINECONE_INDEX_NAME);
 
 const getEmbeddings = async (query) => {
   // query the Pinecone index for embeddings
@@ -52,14 +52,16 @@ const AskAdhikaarAI = async (query) => {
 
                     Your response must follow this JSON format:
                     {{
-                    "message": "<Answer in a clear and concise tone>",
+                    "message": "<Answer in a clear and concise tone with headings such as immediate action, legal advice, etc. and reply in markdown format>",
                     "reference": ["<Legal source reference like Constitution of Nepal, Part 3, Article 17>"],
                     "category": ["<Recommended type of lawyer or legal domain — e.g., constitutional lawyer, civil lawyer, criminal defense lawyer, family lawyer, etc.>"],
                     "type": "legal_query"
                     }}
 
                     Instructions:
-                    - Use ONLY the provided context to answer the question.
+                    - Use the provided context to answer the question and web.
+                    - If the context is not sufficient, provide a general answer based on your knowledge.
+                    - If the query is not related to law, respond with "This query is not related
                     - Respond in the **same language** as the original query.
                     - Clearly cite the legal document, part, article, chapter, or schedule used in the answer.
 
