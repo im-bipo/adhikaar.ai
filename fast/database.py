@@ -22,24 +22,24 @@ database = pc.Index(database_name)
 # embedding-model 
 embedder = SentenceTransformer(emdedding_model)
 
-# # # reranker-model
-# reranker = SentenceTransformer(reranker_model)
+# # reranker-model
+reranker = SentenceTransformer(reranker_model)
 
 
-# def rerank_chunks(query:str, chunks:list)-> list:
-#      pairs = [(query, chunk['metadata']['text']) for chunk in chunks]
-#      # scores = reranker.predict(pairs, convert_to_tensor=True)
-#      # sorted_chunks = sorted(zip(chunks, scores), key=lambda x: x[1], reverse=True)
-#      # return [chunk for chunk, score in sorted_chunks[:5]]
-#      return scores
+def rerank_chunks(query:str, chunks:list)-> list:
+     pairs = [(query, chunk['metadata']['text']) for chunk in chunks]
+     scores = reranker.predict(pairs, convert_to_tensor=True)
+     sorted_chunks = sorted(zip(chunks, scores), key=lambda x: x[1], reverse=True)
+     return [chunk for chunk, score in sorted_chunks[:5]]
+
 
 
 def top_k_chunks(query:str) -> list:
      embeded_query = embedder.encode(query, convert_to_tensor=True).tolist()
      # Query the database for top-k chunks  
      chunks = database.query(vector=embeded_query, top_k=10 , include_metadata=True)
-     # rerank_chunks = rerank_chunks(query, chunks['matches'])
-     # return rerank_chunks
-     return chunks['matches']
+     top_chunks = rerank_chunks(query, chunks['matches'])
+     return top_chunks
+   
 
 
