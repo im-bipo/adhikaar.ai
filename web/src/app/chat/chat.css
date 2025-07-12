@@ -90,3 +90,42 @@
 .lawyer-grid-card {
   min-height: 200px;
 }
+
+/* Mobile responsive improvements */
+@media (max-width: 1024px) {
+  .lawyer-grid-card {
+    min-height: 180px;
+  }
+
+  .lawyer-description {
+    height: 1.5rem;
+    -webkit-line-clamp: 1;
+    line-clamp: 1;
+  }
+}
+
+@media (max-width: 640px) {
+  .lawyer-grid-card {
+    min-height: 160px;
+  }
+
+  .lawyer-description {
+    height: 1.25rem;
+    -webkit-line-clamp: 1;
+    line-clamp: 1;
+  }
+}
+
+/* Responsive text utilities */
+@media (max-width: 640px) {
+  .text-responsive {
+    font-size: 0.75rem;
+  }
+}
+
+/* Ensure proper flex layout on small screens */
+@media (max-width: 1024px) {
+  .chat-container {
+    flex-direction: column;
+  }
+}
