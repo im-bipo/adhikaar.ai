@@ -1,15 +1,29 @@
 // my-component.js or my-page.js
-'use client';
+"use client";
 
 import { useState, useEffect } from "react"; // Import useEffect
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Progress } from "@/components/ui/progress";
-import { ChevronLeft, ChevronRight, User, Briefcase, MapPin, BarChart3, Camera } from "lucide-react";
+import {
+  ChevronLeft,
+  ChevronRight,
+  User,
+  Briefcase,
+  MapPin,
+  BarChart3,
+  Camera,
+} from "lucide-react";
 import { useUser } from "@clerk/nextjs"; // Import useUser hook
 
 const LAWYER_SPECIALTIES = [
@@ -67,7 +81,9 @@ export default function LawyerRegistrationForm() {
       setFormData((prev) => ({
         ...prev,
         userId: user.id || "",
-        name: user.fullName || `${user.firstName || ''} ${user.lastName || ''}`.trim(),
+        name:
+          user.fullName ||
+          `${user.firstName || ""} ${user.lastName || ""}`.trim(),
         email: user.primaryEmailAddress?.emailAddress || "",
         profilePicture: user.imageUrl || "", // Pre-fill profile picture if available
       }));
@@ -76,10 +92,10 @@ export default function LawyerRegistrationForm() {
 
   // useEffect to update total cases whenever won, lost, or pending cases change
   useEffect(() => {
-    const total = formData.wonCases + formData.lostCases + formData.pendingCases;
+    const total =
+      formData.wonCases + formData.lostCases + formData.pendingCases;
     setFormData((prev) => ({ ...prev, noOfCases: total }));
   }, [formData.wonCases, formData.lostCases, formData.pendingCases]);
-
 
   const updateFormData = (field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -96,24 +112,32 @@ export default function LawyerRegistrationForm() {
       case 1:
         if (!formData.name.trim()) newErrors.name = "Name is required";
         if (!formData.email.trim()) newErrors.email = "Email is required";
-        else if (!/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = "Email is invalid";
-        if (!formData.phoneNumber.trim()) newErrors.phoneNumber = "Phone number is required";
+        else if (!/\S+@\S+\.\S+/.test(formData.email))
+          newErrors.email = "Email is invalid";
+        if (!formData.phoneNumber.trim())
+          newErrors.phoneNumber = "Phone number is required";
         break;
       case 2:
         if (!formData.barId.trim()) newErrors.barId = "Bar ID is required";
-        if (formData.specialty.length === 0) newErrors.specialty = "At least one specialty is required";
-        if (!formData.description.trim()) newErrors.description = "Description is required";
+        if (formData.specialty.length === 0)
+          newErrors.specialty = "At least one specialty is required";
+        if (!formData.description.trim())
+          newErrors.description = "Description is required";
         break;
       case 3:
         if (!formData.city.trim()) newErrors.city = "City is required";
-        if (!formData.state.trim()) newErrors.state = "State/Province is required";
+        if (!formData.state.trim())
+          newErrors.state = "State/Province is required";
         if (!formData.country.trim()) newErrors.country = "Country is required";
         break;
       case 4:
         // noOfCases is now derived, so only validate won/lost/pending for non-negativity
-        if (formData.wonCases < 0) newErrors.wonCases = "Won cases cannot be negative";
-        if (formData.lostCases < 0) newErrors.lostCases = "Lost cases cannot be negative";
-        if (formData.pendingCases < 0) newErrors.pendingCases = "Pending cases cannot be negative";
+        if (formData.wonCases < 0)
+          newErrors.wonCases = "Won cases cannot be negative";
+        if (formData.lostCases < 0)
+          newErrors.lostCases = "Lost cases cannot be negative";
+        if (formData.pendingCases < 0)
+          newErrors.pendingCases = "Pending cases cannot be negative";
         break;
     }
 
@@ -137,19 +161,20 @@ export default function LawyerRegistrationForm() {
     } else {
       updateFormData(
         "specialty",
-        formData.specialty.filter((s) => s !== specialty),
+        formData.specialty.filter((s) => s !== specialty)
       );
     }
   };
 
   const handleSubmit = async () => {
     // Validate the final step before submission
-    if (validateStep(currentStep)) { // Changed from validateStep(4) to currentStep to ensure final step is validated
+    if (validateStep(currentStep)) {
+      // Changed from validateStep(4) to currentStep to ensure final step is validated
       try {
         console.log("Submitting lawyer data:", formData); // Log data before sending
 
         // Add userId to the data being sent
-        const dataToSend = { ...formData, userId: user?.id || "" }; 
+        const dataToSend = { ...formData, userId: user?.id || "" };
 
         const response = await fetch("/api/lawyer", {
           method: "POST",
@@ -166,7 +191,7 @@ export default function LawyerRegistrationForm() {
         } else {
           const errorData = await response.json();
           console.error("Error submitting form:", errorData);
-          alert(`Error submitting form: ${errorData.error || 'Unknown error'}`);
+          alert(`Error submitting form: ${errorData.error || "Unknown error"}`);
         }
       } catch (error) {
         console.error("Network error or unexpected issue:", error);
@@ -204,7 +229,9 @@ export default function LawyerRegistrationForm() {
       <Card>
         <CardHeader>
           <CardTitle>Lawyer Registration</CardTitle>
-          <CardDescription>Complete your professional profile in {STEPS.length} easy steps</CardDescription>
+          <CardDescription>
+            Complete your professional profile in {STEPS.length} easy steps
+          </CardDescription>
           <div className="space-y-2">
             <Progress value={progress} className="w-full" />
             <div className="flex justify-between text-xs text-muted-foreground">
@@ -213,7 +240,9 @@ export default function LawyerRegistrationForm() {
                 return (
                   <div
                     key={step.id}
-                    className={`flex items-center space-x-1 ${currentStep >= step.id ? "text-primary" : ""}`}
+                    className={`flex items-center space-x-1 ${
+                      currentStep >= step.id ? "text-primary" : ""
+                    }`}
                   >
                     <Icon className="h-3 w-3" />
                     <span className="hidden sm:inline">{step.title}</span>
@@ -233,7 +262,11 @@ export default function LawyerRegistrationForm() {
             </div>
 
             <div className="flex justify-between">
-              <Button variant="outline" onClick={prevStep} disabled={currentStep === 1}>
+              <Button
+                variant="outline"
+                onClick={prevStep}
+                disabled={currentStep === 1}
+              >
                 <ChevronLeft className="h-4 w-4 mr-2" />
                 Previous
               </Button>
@@ -271,7 +304,9 @@ export default function LawyerRegistrationForm() {
                 placeholder="Enter your full name"
                 className={errors.name ? "border-red-500" : ""}
               />
-              {errors.name && <p className="text-sm text-red-500">{errors.name}</p>}
+              {errors.name && (
+                <p className="text-sm text-red-500">{errors.name}</p>
+              )}
             </div>
             <div className="space-y-2">
               <Label htmlFor="email">Email Address *</Label>
@@ -284,7 +319,9 @@ export default function LawyerRegistrationForm() {
                 placeholder="Enter your email address"
                 className={errors.email ? "border-red-500" : ""}
               />
-              {errors.email && <p className="text-sm text-red-500">{errors.email}</p>}
+              {errors.email && (
+                <p className="text-sm text-red-500">{errors.email}</p>
+              )}
             </div>
             <div className="space-y-2">
               <Label htmlFor="phoneNumber">Phone Number *</Label>
@@ -295,7 +332,9 @@ export default function LawyerRegistrationForm() {
                 placeholder="Enter your phone number"
                 className={errors.phoneNumber ? "border-red-500" : ""}
               />
-              {errors.phoneNumber && <p className="text-sm text-red-500">{errors.phoneNumber}</p>}
+              {errors.phoneNumber && (
+                <p className="text-sm text-red-500">{errors.phoneNumber}</p>
+              )}
             </div>
           </div>
         );
@@ -312,25 +351,37 @@ export default function LawyerRegistrationForm() {
                 placeholder="Enter your Bar ID"
                 className={errors.barId ? "border-red-500" : ""}
               />
-              {errors.barId && <p className="text-sm text-red-500">{errors.barId}</p>}
+              {errors.barId && (
+                <p className="text-sm text-red-500">{errors.barId}</p>
+              )}
             </div>
             <div className="space-y-2">
               <Label>Legal Specialties *</Label>
               <div className="grid grid-cols-2 gap-2 max-h-48 overflow-y-auto border rounded-md p-3">
                 {LAWYER_SPECIALTIES.map((specialty) => (
-                  <div key={specialty.value} className="flex items-center space-x-2">
+                  <div
+                    key={specialty.value}
+                    className="flex items-center space-x-2"
+                  >
                     <Checkbox
                       id={specialty.value}
                       checked={formData.specialty.includes(specialty.value)}
-                      onCheckedChange={(checked) => handleSpecialtyChange(specialty.value, checked)}
+                      onCheckedChange={(checked) =>
+                        handleSpecialtyChange(specialty.value, checked)
+                      }
                     />
-                    <Label htmlFor={specialty.value} className="text-sm font-normal">
+                    <Label
+                      htmlFor={specialty.value}
+                      className="text-sm font-normal"
+                    >
                       {specialty.label}
                     </Label>
                   </div>
                 ))}
               </div>
-              {errors.specialty && <p className="text-sm text-red-500">{errors.specialty}</p>}
+              {errors.specialty && (
+                <p className="text-sm text-red-500">{errors.specialty}</p>
+              )}
             </div>
             <div className="space-y-2">
               <Label htmlFor="description">Professional Description *</Label>
@@ -339,9 +390,13 @@ export default function LawyerRegistrationForm() {
                 value={formData.description}
                 onChange={(e) => updateFormData("description", e.target.value)}
                 placeholder="Describe your professional experience and expertise"
-                className={`min-h-[100px] ${errors.description ? "border-red-500" : ""}`}
+                className={`min-h-[100px] ${
+                  errors.description ? "border-red-500" : ""
+                }`}
               />
-              {errors.description && <p className="text-sm text-red-500">{errors.description}</p>}
+              {errors.description && (
+                <p className="text-sm text-red-500">{errors.description}</p>
+              )}
             </div>
           </div>
         );
@@ -358,7 +413,9 @@ export default function LawyerRegistrationForm() {
                 placeholder="Enter your city"
                 className={errors.city ? "border-red-500" : ""}
               />
-              {errors.city && <p className="text-sm text-red-500">{errors.city}</p>}
+              {errors.city && (
+                <p className="text-sm text-red-500">{errors.city}</p>
+              )}
             </div>
             <div className="space-y-2">
               <Label htmlFor="state">State/Province *</Label>
@@ -369,7 +426,9 @@ export default function LawyerRegistrationForm() {
                 placeholder="Enter your state or province"
                 className={errors.state ? "border-red-500" : ""}
               />
-              {errors.state && <p className="text-sm text-red-500">{errors.state}</p>}
+              {errors.state && (
+                <p className="text-sm text-red-500">{errors.state}</p>
+              )}
             </div>
             <div className="space-y-2">
               <Label htmlFor="country">Country *</Label>
@@ -380,7 +439,9 @@ export default function LawyerRegistrationForm() {
                 placeholder="Enter your country"
                 className={errors.country ? "border-red-500" : ""}
               />
-              {errors.country && <p className="text-sm text-red-500">{errors.country}</p>}
+              {errors.country && (
+                <p className="text-sm text-red-500">{errors.country}</p>
+              )}
             </div>
           </div>
         );
@@ -400,7 +461,9 @@ export default function LawyerRegistrationForm() {
                 placeholder="0"
                 className={errors.noOfCases ? "border-red-500" : ""}
               />
-              {errors.noOfCases && <p className="text-sm text-red-500">{errors.noOfCases}</p>}
+              {errors.noOfCases && (
+                <p className="text-sm text-red-500">{errors.noOfCases}</p>
+              )}
             </div>
             <div className="grid grid-cols-3 gap-4">
               <div className="space-y-2">
@@ -410,11 +473,18 @@ export default function LawyerRegistrationForm() {
                   type="number"
                   min="0"
                   value={formData.wonCases}
-                  onChange={(e) => updateFormData("wonCases", Number.parseInt(e.target.value) || 0)}
+                  onChange={(e) =>
+                    updateFormData(
+                      "wonCases",
+                      Number.parseInt(e.target.value) || 0
+                    )
+                  }
                   placeholder="0"
                   className={errors.wonCases ? "border-red-500" : ""}
                 />
-                {errors.wonCases && <p className="text-sm text-red-500">{errors.wonCases}</p>}
+                {errors.wonCases && (
+                  <p className="text-sm text-red-500">{errors.wonCases}</p>
+                )}
               </div>
               <div className="space-y-2">
                 <Label htmlFor="lostCases">Lost Cases</Label>
@@ -423,11 +493,18 @@ export default function LawyerRegistrationForm() {
                   type="number"
                   min="0"
                   value={formData.lostCases}
-                  onChange={(e) => updateFormData("lostCases", Number.parseInt(e.target.value) || 0)}
+                  onChange={(e) =>
+                    updateFormData(
+                      "lostCases",
+                      Number.parseInt(e.target.value) || 0
+                    )
+                  }
                   placeholder="0"
                   className={errors.lostCases ? "border-red-500" : ""}
                 />
-                {errors.lostCases && <p className="text-sm text-red-500">{errors.lostCases}</p>}
+                {errors.lostCases && (
+                  <p className="text-sm text-red-500">{errors.lostCases}</p>
+                )}
               </div>
               <div className="space-y-2">
                 <Label htmlFor="pendingCases">Pending Cases</Label>
@@ -436,11 +513,18 @@ export default function LawyerRegistrationForm() {
                   type="number"
                   min="0"
                   value={formData.pendingCases}
-                  onChange={(e) => updateFormData("pendingCases", Number.parseInt(e.target.value) || 0)}
+                  onChange={(e) =>
+                    updateFormData(
+                      "pendingCases",
+                      Number.parseInt(e.target.value) || 0
+                    )
+                  }
                   placeholder="0"
                   className={errors.pendingCases ? "border-red-500" : ""}
                 />
-                {errors.pendingCases && <p className="text-sm text-red-500">{errors.pendingCases}</p>}
+                {errors.pendingCases && (
+                  <p className="text-sm text-red-500">{errors.pendingCases}</p>
+                )}
               </div>
             </div>
           </div>
@@ -450,11 +534,15 @@ export default function LawyerRegistrationForm() {
         return (
           <div className="space-y-6">
             <div className="space-y-2">
-              <Label htmlFor="profilePicture">Profile Picture URL (Optional)</Label>
+              <Label htmlFor="profilePicture">
+                Profile Picture URL (Optional)
+              </Label>
               <Input
                 id="profilePicture"
                 value={formData.profilePicture}
-                onChange={(e) => updateFormData("profilePicture", e.target.value)}
+                onChange={(e) =>
+                  updateFormData("profilePicture", e.target.value)
+                }
                 placeholder="Enter profile picture URL"
               />
             </div>
@@ -463,7 +551,8 @@ export default function LawyerRegistrationForm() {
               <h3 className="text-lg font-semibold">Review Your Information</h3>
               <div className="space-y-2 text-sm">
                 <div>
-                  <strong>Clerk User ID:</strong> {formData.userId} {/* Display hidden user ID for review */}
+                  <strong>Clerk User ID:</strong> {formData.userId}{" "}
+                  {/* Display hidden user ID for review */}
                 </div>
                 <div>
                   <strong>Name:</strong> {formData.name}
@@ -479,21 +568,33 @@ export default function LawyerRegistrationForm() {
                 </div>
                 <div>
                   <strong>Specialties:</strong>{" "}
-                  {formData.specialty.map((s) => LAWYER_SPECIALTIES.find((spec) => spec.value === s)?.label).join(", ")}
+                  {formData.specialty
+                    .map(
+                      (s) =>
+                        LAWYER_SPECIALTIES.find((spec) => spec.value === s)
+                          ?.label
+                    )
+                    .join(", ")}
                 </div>
                 <div>
-                  <strong>Location:</strong> {formData.city}, {formData.state}, {formData.country}
+                  <strong>Location:</strong> {formData.city}, {formData.state},{" "}
+                  {formData.country}
                 </div>
                 <div>
                   <strong>Total Cases:</strong> {formData.noOfCases}
                 </div>
                 <div>
-                  <strong>Won/Lost/Pending:</strong> {formData.wonCases}/{formData.lostCases}/{formData.pendingCases}
+                  <strong>Won/Lost/Pending:</strong> {formData.wonCases}/
+                  {formData.lostCases}/{formData.pendingCases}
                 </div>
                 {formData.profilePicture && (
                   <div>
                     <strong>Profile Picture:</strong>{" "}
-                    <img src={formData.profilePicture} alt="Profile" className="w-16 h-16 rounded-full inline-block ml-2" />
+                    <img
+                      src={formData.profilePicture}
+                      alt="Profile"
+                      className="w-16 h-16 rounded-full inline-block ml-2"
+                    />
                   </div>
                 )}
               </div>

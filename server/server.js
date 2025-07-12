@@ -49,16 +49,33 @@ io.on("connection", (socket) => {
     });
   });
 
-  // Handle admin joining
-  socket.on("join-admin", (adminData) => {
-    socket.join("admin");
-    connectedAdmins.set(socket.id, {
-      ...adminData,
-      connectedAt: new Date(),
-    });
-    console.log("Admin joined:", adminData);
+  // Handle lawyer joining a chat session
+  socket.on("lawyer-join-chat", async (data) => {
+    const { lawyerId, chatSessionId, lawyerName } = data;
+    socket.join(`chat-${chatSessionId}`);
 
-    // Send current stats to admin
+    connectedAdmins.set(socket.id, {
+      ...data,
+      connectedAt: new Date(),
+      type: "lawyer",
+    });
+
+    console.log(`Lawyer ${lawyerName} joined chat session: ${chatSessionId}`);
+
+    // Notify user that lawyer has joined
+    const joinMessage = {
+      id: Date.now().toString(),
+      content: `${lawyerName} has joined the chat`,
+      messageType: "SYSTEM",
+      senderType: "SYSTEM",
+      timestamp: new Date().toISOString(),
+      chatSessionId,
+    };
+
+    // Send to all participants in the chat session
+    io.to(`chat-${chatSessionId}`).emit("lawyer-joined", joinMessage);
+
+    // Send current stats to lawyer
     socket.emit("admin-stats", {
       connectedUsers: connectedUsers.size,
       connectedAdmins: connectedAdmins.size,
@@ -71,16 +88,34 @@ io.on("connection", (socket) => {
     });
   });
 
-  // Handle user messages to admin
-  socket.on("user-to-admin", (data) => {
-    console.log("User message to admin:", data);
+  // Handle user joining a specific chat session
+  socket.on("user-join-chat", (data) => {
+    const { chatSessionId, userId } = data;
+    socket.join(`chat-${chatSessionId}`);
 
+    connectedUsers.set(socket.id, {
+      ...(connectedUsers.get(socket.id) || {}),
+      ...data,
+      chatSessionId,
+    });
+
+    console.log(`User joined chat session: ${chatSessionId}`);
+  });
+
+  // Handle user messages in chat sessions
+  socket.on("user-to-chat", (data) => {
+    console.log("User message in chat:", data);
+
+    const { chatSessionId, content, userId } = data;
     const userInfo = connectedUsers.get(socket.id);
+
     const messageData = {
       ...data,
       socketId: socket.id,
       userInfo,
       timestamp: new Date().toISOString(),
+      messageType: "TEXT",
+      senderType: "USER",
     };
 
     // Store message in user session
@@ -89,43 +124,50 @@ io.on("connection", (socket) => {
     }
     userSessions.get(socket.id).push({
       type: "user",
-      content: data.content,
+      content: content,
       timestamp: messageData.timestamp,
+      chatSessionId,
     });
 
-    // Send to all admins
-    io.to("admin").emit("user-message", messageData);
+    // Send to all participants in the chat session
+    io.to(`chat-${chatSessionId}`).emit("chat-message", messageData);
   });
 
-  // Handle admin responses
-  socket.on("admin-response", (data) => {
-    console.log("Admin response:", data);
+  // Handle lawyer responses in chat sessions
+  socket.on("lawyer-to-chat", (data) => {
+    console.log("Lawyer message in chat:", data);
 
-    const adminInfo = connectedAdmins.get(socket.id);
+    const { chatSessionId, content, lawyerId, targetUserId } = data;
+    const lawyerInfo = connectedAdmins.get(socket.id);
+
     const messageData = {
       ...data,
-      adminInfo,
+      lawyerInfo,
       timestamp: new Date().toISOString(),
+      messageType: "TEXT",
+      senderType: "LAWYER",
     };
 
-    // Store message in user session if targeting specific user
-    if (data.targetSocketId && userSessions.has(data.targetSocketId)) {
-      userSessions.get(data.targetSocketId).push({
-        type: "admin",
-        content: data.content,
-        timestamp: messageData.timestamp,
-        adminInfo,
-      });
+    // Store message in relevant user sessions
+    if (targetUserId) {
+      // Find user socket by userId and store message
+      for (let [socketId, sessionData] of userSessions.entries()) {
+        const userData = connectedUsers.get(socketId);
+        if (userData && userData.userId === targetUserId) {
+          sessionData.push({
+            type: "lawyer",
+            content: content,
+            timestamp: messageData.timestamp,
+            lawyerInfo,
+            chatSessionId,
+          });
+          break;
+        }
+      }
     }
 
-    // Send to specific user or broadcast
-    if (data.targetSocketId) {
-      io.to(data.targetSocketId).emit("admin-message", messageData);
-      // Also notify other admins about the response
-      socket.to("admin").emit("admin-sent-message", messageData);
-    } else {
-      socket.broadcast.emit("admin-message", messageData);
-    }
+    // Send to all participants in the chat session
+    io.to(`chat-${chatSessionId}`).emit("chat-message", messageData);
   });
 
   // Handle typing indicators

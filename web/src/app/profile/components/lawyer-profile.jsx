@@ -1,9 +1,9 @@
-"use client"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Button } from "@/components/ui/button"
-import { Separator } from "@/components/ui/separator"
+"use client";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
 import {
   Mail,
   Phone,
@@ -17,7 +17,7 @@ import {
   Calendar,
   User,
   BarChart3,
-} from "lucide-react"
+} from "lucide-react";
 
 const SPECIALTY_LABELS = {
   CRIMINAL_LAW: "Criminal Law",
@@ -34,53 +34,52 @@ const SPECIALTY_LABELS = {
   ESTATE_PLANNING: "Estate Planning",
   HEALTHCARE_LAW: "Healthcare Law",
   CIVIL_LITIGATION: "Civil Litigation",
-}
+};
 
 export default function LawyerProfile(lawyer) {
-
-    console.log("haha Lawyer Profile Data:", lawyer);
-const lawyerData = {
-  id: "user_2zjBCxIKEQAkGTbrxzCqy2xybbE",
-  createdAt: "2025-07-11T16:20:18.217Z",
-  updatedAt: "2025-07-11T16:20:18.217Z",
-  name: "Bipin Khatri",
-  email: "bipinkhatri.ram@gmail.com",
-  barId: "Culpa perspiciatis",
-  specialty: ["INTELLECTUAL_PROPERTY_LAW"],
-  description: "In nisi ad excepturi",
-  profilePicture:
-    "https://img.clerk.com/eyJ0eXBlIjoicHJveHkiLCJzcmMiOiJodHRwczovL2ltYWdlcy5jbGVyay5kZXYvb2F1dGhfZ29vZ2xlL2ltZ18yempCQ3dIdXNCeWUwWnBSOVV1UEY0Q3l4RE4ifQ",
-  noOfCases: 0,
-  wonCases: 0,
-  lostCases: 0,
-  pendingCases: 0,
-  city: "Voluptate et assumen",
-  state: "Autem deleniti in su",
-  country: "Ipsa a in natus ips",
-  phoneNumber: "+1 (843) 763-4074",
-}
+  console.log("haha Lawyer Profile Data:", lawyer);
+  const lawyerData = {
+    id: "user_2zjBCxIKEQAkGTbrxzCqy2xybbE",
+    createdAt: "2025-07-11T16:20:18.217Z",
+    updatedAt: "2025-07-11T16:20:18.217Z",
+    name: "Bipin Khatri",
+    email: "bipinkhatri.ram@gmail.com",
+    barId: "Culpa perspiciatis",
+    specialty: ["INTELLECTUAL_PROPERTY_LAW"],
+    description: "In nisi ad excepturi",
+    profilePicture:
+      "https://img.clerk.com/eyJ0eXBlIjoicHJveHkiLCJzcmMiOiJodHRwczovL2ltYWdlcy5jbGVyay5kZXYvb2F1dGhfZ29vZ2xlL2ltZ18yempCQ3dIdXNCeWUwWnBSOVV1UEY0Q3l4RE4ifQ",
+    noOfCases: 0,
+    wonCases: 0,
+    lostCases: 0,
+    pendingCases: 0,
+    city: "Voluptate et assumen",
+    state: "Autem deleniti in su",
+    country: "Ipsa a in natus ips",
+    phoneNumber: "+1 (843) 763-4074",
+  };
 
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString("en-US", {
       year: "numeric",
       month: "long",
       day: "numeric",
-    })
-  }
+    });
+  };
 
   const getInitials = (name) => {
     return name
       .split(" ")
       .map((n) => n[0])
       .join("")
-      .toUpperCase()
-  }
+      .toUpperCase();
+  };
 
   const calculateSuccessRate = () => {
-    const totalCompletedCases = lawyerData.wonCases + lawyerData.lostCases
-    if (totalCompletedCases === 0) return 0
-    return Math.round((lawyerData.wonCases / totalCompletedCases) * 100)
-  }
+    const totalCompletedCases = lawyerData.wonCases + lawyerData.lostCases;
+    if (totalCompletedCases === 0) return 0;
+    return Math.round((lawyerData.wonCases / totalCompletedCases) * 100);
+  };
 
   return (
     <div className="max-w-4xl mx-auto p-6 space-y-6">
@@ -89,16 +88,26 @@ const lawyerData = {
           <div className="flex flex-col md:flex-row gap-6">
             <div className="flex-shrink-0">
               <Avatar className="h-32 w-32">
-                <AvatarImage src={lawyerData.profilePicture || "/placeholder.svg"} alt={lawyerData.name} />
-                <AvatarFallback className="text-2xl">{getInitials(lawyerData.name)}</AvatarFallback>
+                <AvatarImage
+                  src={lawyerData.profilePicture || "/placeholder.svg"}
+                  alt={lawyerData.name}
+                />
+                <AvatarFallback className="text-2xl">
+                  {getInitials(lawyerData.name)}
+                </AvatarFallback>
               </Avatar>
             </div>
 
             <div className="flex-1 space-y-4">
               <div>
-                <h1 className="text-3xl font-bold text-gray-900">{lawyerData.name}</h1>
+                <h1 className="text-3xl font-bold text-gray-900">
+                  {lawyerData.name}
+                </h1>
                 <p className="text-lg text-gray-600 mt-1">
-                  {lawyerData.specialty.map((s) => SPECIALTY_LABELS[s]).join(", ")} Attorney
+                  {lawyerData.specialty
+                    .map((s) => SPECIALTY_LABELS[s])
+                    .join(", ")}{" "}
+                  Attorney
                 </p>
               </div>
 
@@ -150,7 +159,9 @@ const lawyerData = {
               <Phone className="h-4 w-4 text-gray-500" />
               <div>
                 <p className="text-sm font-medium">Phone</p>
-                <p className="text-sm text-gray-600">{lawyerData.phoneNumber}</p>
+                <p className="text-sm text-gray-600">
+                  {lawyerData.phoneNumber}
+                </p>
               </div>
             </div>
 
@@ -178,7 +189,9 @@ const lawyerData = {
           <CardContent>
             <div className="space-y-4">
               <div className="text-center">
-                <div className="text-3xl font-bold text-blue-600">{lawyerData.noOfCases}</div>
+                <div className="text-3xl font-bold text-blue-600">
+                  {lawyerData.noOfCases}
+                </div>
                 <p className="text-sm text-gray-600">Total Cases</p>
               </div>
 
@@ -188,7 +201,9 @@ const lawyerData = {
                 <div>
                   <div className="flex items-center justify-center gap-1">
                     <Trophy className="h-4 w-4 text-green-600" />
-                    <span className="text-lg font-semibold text-green-600">{lawyerData.wonCases}</span>
+                    <span className="text-lg font-semibold text-green-600">
+                      {lawyerData.wonCases}
+                    </span>
                   </div>
                   <p className="text-xs text-gray-600">Won</p>
                 </div>
@@ -196,7 +211,9 @@ const lawyerData = {
                 <div>
                   <div className="flex items-center justify-center gap-1">
                     <XCircle className="h-4 w-4 text-red-600" />
-                    <span className="text-lg font-semibold text-red-600">{lawyerData.lostCases}</span>
+                    <span className="text-lg font-semibold text-red-600">
+                      {lawyerData.lostCases}
+                    </span>
                   </div>
                   <p className="text-xs text-gray-600">Lost</p>
                 </div>
@@ -204,7 +221,9 @@ const lawyerData = {
                 <div>
                   <div className="flex items-center justify-center gap-1">
                     <Clock className="h-4 w-4 text-yellow-600" />
-                    <span className="text-lg font-semibold text-yellow-600">{lawyerData.pendingCases}</span>
+                    <span className="text-lg font-semibold text-yellow-600">
+                      {lawyerData.pendingCases}
+                    </span>
                   </div>
                   <p className="text-xs text-gray-600">Pending</p>
                 </div>
@@ -214,7 +233,9 @@ const lawyerData = {
                 <>
                   <Separator />
                   <div className="text-center">
-                    <div className="text-2xl font-bold text-green-600">{calculateSuccessRate()}%</div>
+                    <div className="text-2xl font-bold text-green-600">
+                      {calculateSuccessRate()}%
+                    </div>
                     <p className="text-sm text-gray-600">Success Rate</p>
                   </div>
                 </>
@@ -249,7 +270,9 @@ const lawyerData = {
             </div>
 
             <div>
-              <p className="text-sm font-medium mb-2">Professional Description</p>
+              <p className="text-sm font-medium mb-2">
+                Professional Description
+              </p>
               <p className="text-sm text-gray-600">{lawyerData.description}</p>
             </div>
           </CardContent>
@@ -271,15 +294,22 @@ const lawyerData = {
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
                   <span>Profile Created:</span>
-                  <span className="text-gray-600">{formatDate(lawyerData.createdAt)}</span>
+                  <span className="text-gray-600">
+                    {formatDate(lawyerData.createdAt)}
+                  </span>
                 </div>
                 <div className="flex justify-between">
                   <span>Last Updated:</span>
-                  <span className="text-gray-600">{formatDate(lawyerData.updatedAt)}</span>
+                  <span className="text-gray-600">
+                    {formatDate(lawyerData.updatedAt)}
+                  </span>
                 </div>
                 <div className="flex justify-between">
                   <span>Profile Status:</span>
-                  <Badge variant="outline" className="text-green-600 border-green-600">
+                  <Badge
+                    variant="outline"
+                    className="text-green-600 border-green-600"
+                  >
                     Active
                   </Badge>
                 </div>
@@ -291,7 +321,9 @@ const lawyerData = {
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
                   <span>Primary Specialty:</span>
-                  <span className="text-gray-600">Intellectual Property Law</span>
+                  <span className="text-gray-600">
+                    Intellectual Property Law
+                  </span>
                 </div>
                 <div className="flex justify-between">
                   <span>Years of Experience:</span>
@@ -300,7 +332,9 @@ const lawyerData = {
                 <div className="flex justify-between">
                   <span>Case Load:</span>
                   <span className="text-gray-600">
-                    {lawyerData.noOfCases === 0 ? "New Practice" : `${lawyerData.noOfCases} cases`}
+                    {lawyerData.noOfCases === 0
+                      ? "New Practice"
+                      : `${lawyerData.noOfCases} cases`}
                   </span>
                 </div>
               </div>
@@ -309,5 +343,5 @@ const lawyerData = {
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }

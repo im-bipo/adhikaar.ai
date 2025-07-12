@@ -3,7 +3,7 @@ import httpx
 import json 
 from fastapi import HTTPException
 from dotenv import load_dotenv
-from sentence_transformers import SentenceTransformer
+from sentence_transformers import SentenceTransformer , CrossEncoder
 
 from pinecone import Pinecone , ServerlessSpec
 load_dotenv()
@@ -23,7 +23,7 @@ database = pc.Index(database_name)
 embedder = SentenceTransformer(emdedding_model)
 
 # # reranker-model
-reranker = SentenceTransformer(reranker_model)
+reranker = CrossEncoder(reranker_model)
 
 
 def rerank_chunks(query:str, chunks:list)-> list:

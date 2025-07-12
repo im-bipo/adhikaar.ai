@@ -6,6 +6,7 @@ export async function POST(request) {
 
   const {
     userId,
+    clerkId,
     name,
     email,
     barId,
@@ -21,6 +22,7 @@ export async function POST(request) {
   const newLawyer = await prisma.lawyer.create({
     data: {
       id: userId,
+      clerkId: clerkId,
       name,
       email,
       barId,
@@ -36,7 +38,10 @@ export async function POST(request) {
   console.log("New Lawyer Created:", newLawyer);
 
   return new Response(
-    JSON.stringify({ message: "Lawyer created successfully" }),
+    JSON.stringify({
+      message: "Lawyer created successfully",
+      lawyer: newLawyer,
+    }),
     {
       status: 201,
       headers: {
@@ -48,11 +53,27 @@ export async function POST(request) {
 
 export async function GET(request) {
   try {
-    const lawyers = await prisma.lawyer.findMany({
-      orderBy: {
-        createdAt: "desc",
-      },
-    });
+    const { searchParams } = new URL(request.url);
+    const clerkId = searchParams.get("clerkId");
+
+    let lawyers;
+
+    if (clerkId) {
+      // Get specific lawyer by Clerk ID
+      lawyers = await prisma.lawyer.findMany({
+        where: { clerkId: clerkId },
+        orderBy: {
+          createdAt: "desc",
+        },
+      });
+    } else {
+      // Get all lawyers
+      lawyers = await prisma.lawyer.findMany({
+        orderBy: {
+          createdAt: "desc",
+        },
+      });
+    }
 
     return new Response(
       JSON.stringify({

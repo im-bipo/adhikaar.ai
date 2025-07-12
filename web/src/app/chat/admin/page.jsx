@@ -1,9 +1,9 @@
 "use client";
 
 import React from "react";
-
 import { useState, useEffect, useRef } from "react";
 import { io } from "socket.io-client";
+import { useUser } from "@clerk/nextjs";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -15,21 +15,65 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
-export default function AdminChatPage() {
+export default function LawyerChatPage() {
+  const { user } = useUser();
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [isConnected, setIsConnected] = useState(false);
-  const [stats, setStats] = useState({
-    connectedUsers: 0,
-    connectedAdmins: 0,
-    usersList: [],
-  });
-  const [activeUsers, setActiveUsers] = useState(new Map());
-  const [selectedUser, setSelectedUser] = useState(null);
+  const [lawyerProfile, setLawyerProfile] = useState(null);
+  const [activeChatSessions, setActiveChatSessions] = useState([]);
+  const [selectedChatSession, setSelectedChatSession] = useState(null);
   const [userTyping, setUserTyping] = useState(new Set());
   const socketRef = useRef(null);
   const messagesEndRef = useRef(null);
+
+  // Fetch lawyer profile
+  useEffect(() => {
+    const fetchLawyerProfile = async () => {
+      if (!user) return;
+
+      try {
+        const response = await fetch(`/api/lawyer?clerkId=${user.id}`);
+        const data = await response.json();
+        if (data.success && data.lawyers.length > 0) {
+          setLawyerProfile(data.lawyers[0]);
+        }
+      } catch (error) {
+        console.error("Error fetching lawyer profile:", error);
+      }
+    };
+
+    fetchLawyerProfile();
+  }, [user]);
+
+  // Fetch active chat sessions
+  useEffect(() => {
+    const fetchChatSessions = async () => {
+      if (!lawyerProfile) return;
+
+      try {
+        const response = await fetch(
+          `/api/chat-session?lawyerId=${lawyerProfile.id}`
+        );
+        const data = await response.json();
+        if (data.success) {
+          setActiveChatSessions(data.chatSessions);
+        }
+      } catch (error) {
+        console.error("Error fetching chat sessions:", error);
+      }
+    };
+
+    fetchChatSessions();
+  }, [lawyerProfile]);
 
   useEffect(() => {
     const socketUrl =
